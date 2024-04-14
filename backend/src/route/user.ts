@@ -16,12 +16,17 @@ userRouter.post('/signup', async(c) => {
       datasourceUrl : c.env.DATABASE_URL ,
     }).$extends(withAccelerate()) ;
     const body = await c.req.json() ;
-    const { success } = signupInput.safeParse(body) ;
-    if(!success){
-      c.status(411) ;
-      return c.json({
-        message : "Incorrect Inputs" 
-      })
+    try {
+      const { success } = signupInput.safeParse(body) ;
+      if(!success){
+        c.status(411) ;
+        return c.json({
+          message : "Incorrect Inputs" 
+        })
+      }
+    }
+    catch(err){
+      console.log(err) ;
     }
     try{
       const user = await prisma.user.create({
@@ -40,7 +45,9 @@ userRouter.post('/signup', async(c) => {
   
     } catch(err){
       c.status(411) ;
-      return c.text('invalid') ;
+      return c.json({
+        message : err 
+      }) ;
     }
   
     return c.text('Hello Hono!')

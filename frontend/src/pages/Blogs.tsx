@@ -1,24 +1,42 @@
 import { Appbar } from "../components/Appbar"
 import { BlogCard } from "../components/BlogCard"
-import { useBlogs } from "../hooks"
+import { BLogSkeleton } from "../components/BlogSkeleton.tsx";
+import { useBlogs } from "../hooks/index.ts"
+
+
+interface Blog {
+    "content": string ;
+    "title": string ;
+    "id": number
+    "author": {
+        "name": string 
+    }
+}
 
 export const Blogs = () =>{
-    const {loading,blogs} = useBlogs() ;
 
-    if(loading){
+    const { loadingEachOne , blogsEachOne } = useBlogs() ;
+
+    if(loadingEachOne){
         return <div>
-            loading....
+            <Appbar />
+            <div className="px-40">
+                <BLogSkeleton /> 
+                <BLogSkeleton /> 
+                <BLogSkeleton /> 
+                <BLogSkeleton />
+            </div>
         </div>
     }
     return <div>
            <Appbar />
            <div className="flex justify-center">
         <div className="">
-            {blogs.map(blog => <BlogCard 
-                id = {blog.id} 
-                authorName = {blog.author.name || "U"} 
-                title = {blog.title} 
-                content = {blog.content} 
+            {blogsEachOne.map(blogEach => <BlogCard 
+                id = {blogEach.id} 
+                authorName = {blogEach.author.name || "U"} 
+                title = {blogEach.title} 
+                content = {blogEach.content} 
                 publishedDate = {"12/3/2003"} 
             />)}
         </div>

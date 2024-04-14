@@ -17,13 +17,15 @@ export const useBlog = ({id} : {id : string})=>{
     const [blog,setBlog] = useState<Blog>() ;
 
     useEffect(()=>{
+        console.log(`${BACKEND_URL}/api/v1/blog/${id}`) ;
+
         axios.get(`${BACKEND_URL}/api/v1/blog/${id}`,{
             headers : {
                 Authorization : localStorage.getItem("token") 
             }
         })
             .then(response =>{
-                setBlog(response.data.blogs) ;
+                setBlog(response.data.blog) ;
                 setLoading(false) ;
             })
     },[id])
@@ -34,8 +36,8 @@ export const useBlog = ({id} : {id : string})=>{
 }
 
 export const useBlogs = ()=>{
-    const [loading,setLoading] = useState(true) ;
-    const [blogs,setBlogs] = useState<Blog>() ;
+    const [loadingEachOne,setLoadingEachOne] = useState(true) ;
+    const [blogsEachOne,setBlogsEachOne] = useState<Blog>() ;
 
     useEffect(()=>{
         axios.get(`${BACKEND_URL}/api/v1/blog/bulk`,{
@@ -44,12 +46,12 @@ export const useBlogs = ()=>{
             }
         })
             .then(response =>{
-                setBlogs(response.data.blogs) ;
-                setLoading(false) ;
+                setBlogsEachOne(response.data.blogs) ;
+                setLoadingEachOne(false) ;
             })
     },[])
     return {
-        loading ,
-        blogs
+        loadingEachOne ,
+        blogsEachOne
     }
 }
